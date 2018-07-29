@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>v4 - Collapsible tree in reusable format using D3 v4</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <!-- <script src="added.js"></script> -->
+</head>
+<body>s
+
+<div id="menuBar">
+Source:
+    <select  style="width:150px;">
+        <option value="0">flare_half.json</option>
+        <option value="1">flare.json</option>
+        <option value="2">chi-ontology.json</option>
+        <option value="3">msc2010_tree_pretty.json</option>
+    </select>
+    <input name="expandButton" type="button" value="Expand" onclick="expandTree()" />
+    <input name="collapseButton" type="button" value="Collapse" onclick="collapseTree()" />
+    <input name="debugButton" type="button" value="Debug" onclick="printDebugInfo()" />
+    <input name="doSomethingButton" type="button" value="Test" onclick="doSomething()" />
+</div>
+
+<div id="chart"></div>
+
+
+<script>
+
+    var myTree = tree().height(800).width(1600);
+
+    d3.text('data.tsv', function(error, text)
+    {
+        if (error) throw error;
+        var table = [{
+            name: 'detected',
+            parent: null
+        }];
+        var genes = [];
+        var drugs = [];
+
+        d3.tsvParseRows(text, function (data, index)
+        {
+            if (data[0].startsWith('#')) return;
+
+            if (!genes.find(function(element)
+            {
+                return element === data[5];
+            }))
+            {
+                table.push({
+                    name: data[5],
+                    parent: data[6]
+                });
+                genes.push(data[5]);
+            }
+
+            if (!drugs.find(function(element){ return element === data[6]; })) {
+                table.push({
+                    name: data[6],
+                    parent: "detected"
+                });
+                drugs.push(data[6]);
+            }
+        });
+
+        var wortel = d3.stratify()
+            .id(function(d) { return d.name; })
+            .parentId(function (d)
+            { return d.parent; })
+            (table);
+
+        myTree.data(wortel);
+
+        d3.select('#chart').call(myTree);
+    });
+
+    function printDebugInfo()
+    {
+        var location = document.getElementById("debug");
+        location.innerHTML = "Width = " + myTree.width;
+    }
+
+</script>
+
+<!-- <div id="footer">
+    Footer content
+</div> -->
+
+<!-- Horizontal line -->
+<hr/>
+
+<div >
+    <p>Debug info:</p>
+    <p id="debug" class="node">Something here</p>
+</div>
+
+</body>
+</html>
