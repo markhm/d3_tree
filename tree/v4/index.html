@@ -8,7 +8,7 @@
     <script src="script.js"></script>
     <!-- <script src="added.js"></script> -->
 </head>
-<body>s
+<body>
 
 <div id="menuBar">
 Source:
@@ -18,14 +18,13 @@ Source:
         <option value="2">chi-ontology.json</option>
         <option value="3">msc2010_tree_pretty.json</option>
     </select>
-    <input name="expandButton" type="button" value="Expand" onclick="expandTree()" />
-    <input name="collapseButton" type="button" value="Collapse" onclick="collapseTree()" />
+    <input name="expandButton" type="button" value="Expand" onclick="myTree.expandTree()" />
+    <input name="collapseButton" type="button" value="Collapse" onclick="myTree.collapseTree()" />
     <input name="debugButton" type="button" value="Debug" onclick="printDebugInfo()" />
     <input name="doSomethingButton" type="button" value="Test" onclick="doSomething()" />
 </div>
 
 <div id="chart"></div>
-
 
 <script>
 
@@ -57,7 +56,8 @@ Source:
                 genes.push(data[5]);
             }
 
-            if (!drugs.find(function(element){ return element === data[6]; })) {
+            if (!drugs.find(function(element){ return element === data[6]; }))
+            {
                 table.push({
                     name: data[6],
                     parent: "detected"
@@ -71,6 +71,8 @@ Source:
             .parentId(function (d)
             { return d.parent; })
             (table);
+
+        console.log(wortel);
 
         myTree.data(wortel);
 

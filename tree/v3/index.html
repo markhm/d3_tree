@@ -8,8 +8,8 @@
 <body>
 
     <div id="buttons">
-        <input name="expandButton" type="button" value="Expand" onclick="expandTree()" />
-        <input name="collapseButton" type="button" value="Collapse" onclick="collapseTree()" />
+        <input name="expandButton" type="button" value="Expand" onclick="expandTree_vThree()" />
+        <input name="collapseButton" type="button" value="Collapse" onclick="collapseTree_vThree()" />
     </div>
 
 <div id="tree"></div>
@@ -60,8 +60,6 @@
 
     // d3.select(self.frameElement).style("height", "800px");
 
-    //
-
     function update(source)
     {
 
@@ -86,8 +84,9 @@
           .attr("r", 1e-6)
           .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
+      // add label to node
       nodeEnter.append("text")
-          .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+          .attr("x", function(d) { return d.children || d._children ? -15 : 15; })
           .attr("dy", ".35em")
           .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
           .text(function(d) { return d.name; })
@@ -99,7 +98,7 @@
           .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
       nodeUpdate.select("circle")
-          .attr("r", 4.5)
+          .attr("r", 6)
           .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
       nodeUpdate.select("text")
@@ -165,7 +164,7 @@
     }
 
     // Expand full tree on button press.
-    function expandTree()
+    function expandTree_vThree()
     {
         root.children.forEach(expand);
         update(root);
@@ -182,7 +181,7 @@
     };
 
     // Collapse full tree on button press.
-    function collapseTree()
+    function collapseTree_vThree()
     {
         root.children.forEach(collapse);
         update(root);
