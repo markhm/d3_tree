@@ -3,100 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <title>v4 - Collapsible tree in reusable format using D3 v4</title>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="search.js"></script>
+    <!-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script> -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+    <!-- <script type="text/javascript" src="../script/select2-3.5.4/select2.js"></script> -->
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"></link>
+
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico"/>
     <script src="script.js"></script>
     <!-- <script src="added.js"></script> -->
 </head>
 <body>
-
 <div id="menuBar">
-Source:
-    <select  style="width:150px;">
-        <option value="0">flare_half.json</option>
-        <option value="1">flare.json</option>
-        <option value="2">chi-ontology.json</option>
-        <option value="3">msc2010_tree_pretty.json</option>
-    </select>
-    <input name="expandButton" type="button" value="Expand" onclick="myTree.expandTree()" />
-    <input name="collapseButton" type="button" value="Collapse" onclick="myTree.collapseTree()" />
-    <input name="debugButton" type="button" value="Debug" onclick="printDebugInfo()" />
-    <input name="doSomethingButton" type="button" value="Test" onclick="doSomething()" />
-</div>
-
-<div id="chart"></div>
+Data:&ensp;
+    <select style="width:150px;" onchange="loadOtherTree(value)">
 
 <script>
 
-    var myTree = tree().height(800).width(1600);
+</script>
+        <option value="../data/flare_partly.json">flare_partly.json</option>
+        <option value="../data/flare.json">flare.json</option>
+        <option value="../data/chi-ontology.json">chi-ontology.json</option>
+        <option value="../data/msc2010_tree_pretty.json">msc2010_tree_pretty.json</option> -->
+</select>
 
-    d3.text('data.tsv', function(error, text)
+    <input name="expandButton" type="button" value="Expand" onclick="myTree.expandTree()" />
+    <input name="collapseButton" type="button" value="Collapse" onclick="myTree.collapseTree()" />
+    <input name="resetSearchButton" type="button" value="Reset" onclick="reloadInitialTree()" />
+    <input name="centerButton" type="button" value="Center" onclick="myTree.centerNode()" />
+    <input name="debugButton" type="button" value="Debug" onclick="printDebugInfo()" />
+    <input name="doSomethingButton" type="button" value="Test" onclick="doSomething(name)" />
+&ensp;
+<!-- Click behaviour:&ensp;
+<select style="width:150px;" onchange="switchClick(value)">
+    <option value="expand">Expand/Collapse</option>
+    <option value="select">Select</option>
+</select> -->
+
+<!--    <fieldset>
+        <legend>Audio settings</legend>
+-->
+Node distance:&ensp;
+        <label for="width.slider">Width</label>
+        <input id="width.slider" type="range" name="tree_width" min="100" value="180" max="500" step="1" />
+        <label for="height.slider">Height</label>
+        <input id="height.slider" type="range" name="tree_height" min="0" value="0" max="250" step="1" />
+
+<!--    </fieldset> -->
+
+</div>
+<br/>
+
+<div id="wrapper" class="wrapper">
+    <div id="inner">
+        <div id="content" class="content">
+            <div id ="chart" />
+        </div>
+        <div id="sidebar" class="sidebar">
+            <p>Node info:</p>
+            <p id="infoField" class="node">Name: (click node)</p>
+        </div>
+        </div>
+    <div id="cleared" class="cleared"></div>
+    <div id="search"></div>
+</div>
+
+<!-- <div id="chart" style="border: 1px solid black"></div> -->
+<script>
+    var select2_data;
+    var height = 800;
+    var width = 1000;
+    var myTree = tree().height(height).width(width);
+
+    var div = d3.select("body")
+        .append("div") // declare the tooltip div
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+
+    d3.json("../data/flare.json", function(error, values)
     {
         if (error) throw error;
-        var table = [{
-            name: 'detected',
-            parent: null
-        }];
-        var genes = [];
-        var drugs = [];
 
-        d3.tsvParseRows(text, function (data, index)
-        {
-            if (data[0].startsWith('#')) return;
+        root = values;
 
-            if (!genes.find(function(element)
-            {
-                return element === data[5];
-            }))
-            {
-                table.push({
-                    name: data[5],
-                    parent: data[6]
-                });
-                genes.push(data[5]);
-            }
+        root.x0 = height / 2 - 150;
+        root.y0 = 0;
 
-            if (!drugs.find(function(element){ return element === data[6]; }))
-            {
-                table.push({
-                    name: data[6],
-                    parent: "detected"
-                });
-                drugs.push(data[6]);
-            }
+        // root.children.forEach(collapse);
+
+        myTree.data(root);
+
+        select2_data = extract_select2_data(values,[],0)[1];//I know, not the prettiest...
+
+        //init search box
+        $("#search").select2({
+            data: select2_data,
+            containerCssClass: "search"
         });
 
-        var wortel = d3.stratify()
-            .id(function(d) { return d.name; })
-            .parentId(function (d)
-            { return d.parent; })
-            (table);
-
-        console.log(wortel);
-
-        myTree.data(wortel);
-
         d3.select('#chart').call(myTree);
+
     });
 
-    function printDebugInfo()
+    //attach search box listener
+	$("#search").on("select2-selecting", function(e)
     {
-        var location = document.getElementById("debug");
-        location.innerHTML = "Width = " + myTree.width;
+        console.log("Before the path is created, checking contents of root");
+        console.log(root);
+		var paths = searchTree(root, e.object.text, []);
+
+        console.log("Before after paths is created, checking contents of paths");
+		console.log(paths);
+
+		if(typeof(paths) !== "undefined")
+		{
+			myTree.openPaths(paths);
+		}
+		else
+        {
+			alert(e.object.text+" not found!");
+		}
+	})
+
+
+    function printNodeInfo(d)
+    {
+        var location = document.getElementById("infoField");
+        location.innerHTML = "Name: " + d.data.name+"<br/>"
+        + "Value: " + d.data.value;
     }
+
+    function loadOtherTree(value)
+    {
+        // remove svg
+        d3.select("svg").remove();
+
+        // build new tree object
+        myTree = tree().height(height).width(width);
+
+        // load new data
+        d3.json(value, function(error, data)
+        {
+            if (error) throw error;
+
+            root = data;
+            console.log(root);
+            root.x0 = height / 2;
+            root.y0 = 0;
+
+            myTree.data(root);
+
+            // put new chart in place
+            d3.select('#chart').call(myTree);
+        });
+    }
+
+    function reloadInitialTree()
+    {
+        loadOtherTree("../data/flare_partly.json");
+        // $("#search").object.text = "";
+    }
+
+    var width_slider = document.getElementById("width.slider");
+
+    width_slider.oninput = function()
+    {
+	    myTree.updateWidth(this.value);
+    }
+
+    var height_slider = document.getElementById("height.slider");
+
+    height_slider.oninput = function()
+    {
+        myTree.updateHeight(this.value);
+    }
+
+    // appendAxes();
+
 
 </script>
 
-<!-- <div id="footer">
-    Footer content
-</div> -->
 
 <!-- Horizontal line -->
-<hr/>
 
-<div >
-    <p>Debug info:</p>
-    <p id="debug" class="node">Something here</p>
+
+<br/>
+
+<div style="width:100%;">
+    <p>Footer</p>
+    <p id="footer" class="node">Lorem Ipsum</p>
 </div>
 
 </body>
