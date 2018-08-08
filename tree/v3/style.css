@@ -5,19 +5,15 @@
 .node circle {
     fill: #fff;
     stroke: steelblue;
-    stroke-width: 2.5px;
+    stroke-width: 1.5px;
 }
 
 .node text {
-    font: 12px sans-serif;
+    font: 10px sans-serif;
 }
 
 .link {
     fill: none;
     stroke: #ccc;
-    stroke-width: 2px;
-}
-
-.body {
-    font: 12px sans-serif;
+    stroke-width: 1.5px;
 }

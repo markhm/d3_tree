@@ -35,7 +35,7 @@ Data:&ensp;
     <input name="collapseButton" type="button" value="Collapse" onclick="myTree.collapseTree()" />
     <input name="resetSearchButton" type="button" value="Reset" onclick="reloadInitialTree()" />
     <input name="centerButton" type="button" value="Center" onclick="myTree.centerNode()" />
-    <input name="debugButton" type="button" value="Debug" onclick="printDebugInfo()" />
+<!--    <input name="debugButton" type="button" value="Debug" onclick="printDebugInfo()" /> -->
     <input name="doSomethingButton" type="button" value="Test" onclick="doSomething(name)" />
 &ensp;
 <!-- Click behaviour:&ensp;
@@ -115,6 +115,7 @@ Node distance:&ensp;
     {
         console.log("Before the path is created, checking contents of root");
         console.log(root);
+        // root = getCurrentRoot(); <- This does not work. It fully blocks the processing of the search result.
 		var paths = searchTree(root, e.object.text, []);
 
         console.log("Before after paths is created, checking contents of paths");
@@ -165,7 +166,7 @@ Node distance:&ensp;
 
     function reloadInitialTree()
     {
-        loadOtherTree("../data/flare_partly.json");
+        loadOtherTree("../data/flare.json");
         // $("#search").object.text = "";
     }
 
@@ -195,8 +196,22 @@ Node distance:&ensp;
 <br/>
 
 <div style="width:100%;">
-    <p>Footer</p>
-    <p id="footer" class="node">Lorem Ipsum</p>
+    <p>Known issues - Thoughts are much appreciated. </p>
+    <p id="issues" class="node">
+        <ol>
+            <li>Node Info box on the right claims horizontal space, despite that it floats.</li>
+            <li>Seach results do not unfold. - The path object (line 118) in is created based on a root object that has not yet been processed by the tree algorithm.</li>
+            <li>Node height slider not yet connected. - Needs tweaking based on the the overall container constraints?</li>
+            <li>Nodes do not expand from themselves, which makes the transition suboptimal. The <a href="../v3/index.html">v3 example</a> is more convincing. </li>
+        </ol>
+    </p>
+    <p>Known issues - Thoughts are much appreciated. </p>
+    <p id="features" class="node">
+    <ul>
+        <li>CSS to be implemented.</li>
+    </ul>
+    </p>
+
 </div>
 
 </body>
