@@ -1,5 +1,5 @@
 {
- "name": "flare",
+ "name": "flare (parts of)",
  "children": [
   {
    "name": "analytics",
@@ -44,32 +44,7 @@
     {"name": "Parallel", "value": 5176},
     {"name": "Pause", "value": 449},
     {"name": "Scheduler", "value": 5593},
-    {"name": "Sequence", "value": 5534},
-    {"name": "Transition", "value": 9201},
-    {"name": "Transitioner", "value": 19975},
-    {"name": "TransitionEvent", "value": 1116},
-    {"name": "Tween", "value": 6006}
-   ]
-  },
-  {
-   "name": "data",
-   "children": [
-    {
-     "name": "converters",
-     "children": [
-      {"name": "Converters", "value": 721},
-      {"name": "DelimitedTextConverter", "value": 4294},
-      {"name": "GraphMLConverter", "value": 9800},
-      {"name": "IDataConverter", "value": 1314},
-      {"name": "JSONConverter", "value": 2220}
-     ]
-    },
-    {"name": "DataField", "value": 1759},
-    {"name": "DataSchema", "value": 2165},
-    {"name": "DataSet", "value": 586},
-    {"name": "DataSource", "value": 3331},
-    {"name": "DataTable", "value": 772},
-    {"name": "DataUtil", "value": 3322}
+    {"name": "Sequence", "value": 5534}
    ]
   },
   {
@@ -158,14 +133,6 @@
      ]
     },
     {
-     "name": "legend",
-     "children": [
-      {"name": "Legend", "value": 20859},
-      {"name": "LegendItem", "value": 4614},
-      {"name": "LegendRange", "value": 10530}
-     ]
-    },
-    {
      "name": "operator",
      "children": [
       {
@@ -174,16 +141,6 @@
         {"name": "BifocalDistortion", "value": 4461},
         {"name": "Distortion", "value": 6314},
         {"name": "FisheyeDistortion", "value": 3444}
-       ]
-      },
-      {
-       "name": "encoder",
-       "children": [
-        {"name": "ColorEncoder", "value": 3179},
-        {"name": "Encoder", "value": 4060},
-        {"name": "PropertyEncoder", "value": 4138},
-        {"name": "ShapeEncoder", "value": 1690},
-        {"name": "SizeEncoder", "value": 1830}
        ]
       },
       {
@@ -215,12 +172,7 @@
         {"name": "IcicleTreeLayout", "value": 4864},
         {"name": "IndentedTreeLayout", "value": 3174},
         {"name": "Layout", "value": 7881},
-        {"name": "NodeLinkTreeLayout", "value": 12870},
-        {"name": "PieLayout", "value": 2728},
-        {"name": "RadialTreeLayout", "value": 12348},
-        {"name": "RandomLayout", "value": 870},
-        {"name": "StackedAreaLayout", "value": 9121},
-        {"name": "TreeMapLayout", "value": 9191}
+        {"name": "NodeLinkTreeLayout", "value": 12870}
        ]
       },
       {"name": "Operator", "value": 2490},
