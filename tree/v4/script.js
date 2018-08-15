@@ -3,9 +3,10 @@ function tree()
     var data, root, treemap, svg,
         i = 0,
         duration = 650,
-        margin = {top: 20, right: 10, bottom: 30, left: 100},
-        width = 1600 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom,
+        // margin = {top: 20, right: 10, bottom: 20, left: 50},
+        margin = {top: 0, right: 0, bottom: 80, left: 50},
+        width = 960 - 4 - margin.left - margin.right, // fitting in block frame
+        height = 800 - 4 - margin.top - margin.bottom, // fitting in block frame
         width_multiplier = 180,
         height_extra_space = 0;
         // update;
@@ -28,7 +29,7 @@ function tree()
 
             // assign parent, children, height, depth
             root = d3.hierarchy(data, function(d) { return d.children });
-            root.x0 = height / 2; // left edge of the rectangle
+            root.x0 = (height / 2); // left edge of the rectangle
             root.y0 = 0; // top edge of the triangle
 
             // collapse after the second level
@@ -154,6 +155,7 @@ function tree()
             .attr('transform', function(d)
             {
                 return 'translate(' + (source.y0 + margin.top) + ',' + (source.x0 + margin.left) + ')';
+                // return 'translate(' + (source.y0) + ',' + (source.x0) + ')';
             })
             .on('click', click);
 
@@ -170,6 +172,7 @@ function tree()
         nodeEnter.append("text")
             .attr("x", function(d) { return d.children || d._children ? -15 : 15; })
             .attr("dy", ".35em")
+            .attr("style", "node")
             .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
             .text(function(d) {
                 // console.log(d);
@@ -196,7 +199,6 @@ function tree()
         // Transition the resulting array to the proper position for the node.
         nodeUpdate.transition().duration(duration)
             .attr('transform', function(d) {
-                console.log(d);
                 return 'translate(' + (d.y + margin.top) + ',' + (d.x + margin.left) + ')';
             });
 
@@ -263,7 +265,7 @@ function tree()
             .attr('class', 'link')
             .attr('d', function(d)
             {
-                var o = {x: source.x0 + margin.left, y: source.y0 + margin.top};
+                var o = {x: source.x0, y: source.y0};
                 return diagonal(o, o);
             });
 
@@ -293,8 +295,8 @@ function tree()
         // store the old positions for transition
         nodes.forEach(function(d)
         {
-            d.x0 = d.x + margin.left;
-            d.y0 = d.y + margin.top;
+            d.x0 = d.x;
+            d.y0 = d.y;
         });
 
         // creates a curved (diagonal) path from parent to the child nodes
@@ -412,7 +414,7 @@ function tree()
       //     scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
       //     translate = [width / 2 - scale * x, height / 2 - scale * y];
 
-      svg.transition().duration(750)
+      svg.transition().duration(duration)
           // .call(zoom.translate(translate).scale(scale).event); // not in d3 v4
           .call(zoom.transform, d3.zoomIdentity.translate(translate[0],translate[1]).scale(scale) ); // updated for d3 v4
     }
@@ -434,9 +436,47 @@ function tree()
     return chart;
 }
 
-function doSomething()
+function printNodeInfo(d)
 {
-    alert("Yes, this works");
+    var location = document.getElementById("infoField");
+    location.innerHTML = "&ensp;name: " + d.data.name+"<br/>"
+        + "&ensp;value: " + d.data.value;
+}
+
+function loadOtherTree(value)
+{
+    // remove svg
+    d3.select("svg").remove();
+
+    // build new tree object
+    myTree = tree().height(height).width(width);
+
+    // load new data
+    d3.json(value, function(error, data)
+    {
+        if (error) throw error;
+
+        root = data;
+        console.log(root);
+        root.x0 = height / 2;
+        root.y0 = 0;
+
+        myTree.data(root);
+
+        // put new chart in place
+        d3.select('#chart').call(myTree);
+    });
+}
+
+function reloadInitialTree()
+{
+    loadOtherTree("flare.json");
+    // $("#search").object.text = "";
+}
+
+function centerTree()
+{
+    alert("To be implemented.");
 }
 
 // from: https://css-tricks.com/snippets/javascript/get-url-variables/
@@ -489,3 +529,22 @@ function appendAxes()
         .attr("transform", "translate(50, " + xAxisTranslate  +")")
         .call(x_axis)
 }
+
+// var fisheye = d3.fisheye.circular
+//     .radius(200)
+//     .distortion(2);
+//
+// svg.on("mousemove", function()
+// {
+//     fisheye.focus(d3.mouse(this));
+//
+//     node.each(function(d) { d.fisheye = fisheye(d); })
+//         .attr("cx", function(d) { return d.fisheye.x; })
+//         .attr("cy", function(d) { return d.fisheye.y; })
+//         .attr("r", function(d) { return d.fisheye.z * 4.5; });
+//
+//     link.attr("x1", function(d) { return d.source.fisheye.x; })
+//         .attr("y1", function(d) { return d.source.fisheye.y; })
+//         .attr("x2", function(d) { return d.target.fisheye.x; })
+//         .attr("y2", function(d) { return d.target.fisheye.y; });
+// });
