@@ -16,7 +16,8 @@ Known issues:
 - Node height slider not yet connected, seems unclear where. Needs tweaking based on the the overall container constraints? Could use Fisheye effect, as shown <a href="https://www.youtube.com/watch?v=C2HlrfHvStM">here</a>. 
 - Nodes do not expand from themselves, which makes the transition suboptimal. Mike's <a href="https://bl.ocks.org/mbostock/4339083">v3 example</a> is more convincing.
 - Wheel-scroll down (dragging with two fingers down on macOS) zooms out, rather than in. I would like to reverse this to align with the prefuse.org default. 
-- Axes implementation (appendAxes() function) needs to be shown in the tree svg, rather than be added in a separate svg (when turned on). <a href="https://bl.ocks.org/mbostock/6123708">This example</a> will be helpful, as well as <a href="https://bl.ocks.org/mbostock/db6b4335bf1662b413e7968910104f0f">this one</a>. 
+- Axes implementation (appendAxes() function) needs to be shown in the tree svg, rather than be added in a separate svg (when turned on). <a href="https://bl.ocks.org/mbostock/6123708">This example</a> will be helpful, as well as <a href="https://bl.ocks.org/mbostock/db6b4335bf1662b413e7968910104f0f">this one</a>.
+- Vertical space between nodes is not large enough and should be based on the size of the dataset. <a href="https://javascript.tutorialhorizon.com/2014/09/15/render-a-d3-tree-with-a-minimum-distance-between-the-tree-nodes/">This example</a> provides help. 
 
 Feature backlog:
 - ~~CSS styles to be fixed, fonts to be aligned.~~
